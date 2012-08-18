@@ -1,0 +1,14 @@
+<h2><%= article.title %></h2>
+<p><%- article.bodyHtml %></p>
+<% if (comments.length) { %>
+  <hr/>
+  <% var comment;
+     for (var i = 0, ii = comments.length; i < ii; i++) {
+     comment = comments[i]; %>
+  <p>
+    <div><a href="<%= comment.website %>"><%= comment.name %></a>
+    (<%= geddy.date.strftime(comment.createdAt, '%F') %>)</div>
+    <div><%- comment.bodyHtml %></div>
+  </p>
+  <% } %>
+<% } %>

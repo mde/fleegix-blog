@@ -2,9 +2,69 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Fleegix.org</title>
+    <link rel="stylesheet" href="/css/bootstrap.responsive.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
   </head>
   <body>
-    <%- yield(); %>
+    <div class="main">
+      <a class="masthead" href="/">Fleegix.org</a>
+      <div class="content-wrap">
+        <div class="content">
+          <%- yield(); %>
+        </div>
+      </div>
+      <div class="right-nav">
+        <h3>About</h3>
+        <p>
+          This is the Weblog for Matthew Eernisse. I currently work at <a
+          href="http://www.yammer.com/">Yammer</a> as a developer, working
+          mostly with JavaScript. All opinions expressed here are my own, not my
+          employer's.
+	      </p>
+        <ul>
+          <li>
+            <a href="https://www.twitter.com/mde">
+              https://www.twitter.com/mde
+            </a>
+          </li>
+          <li>
+            <a href="https://www.github.com/mde">
+              https://www.github.com/mde
+            </a>
+          </li>
+        </ul>
+
+        <h3>Related</h3>
+        <ul>
+          <li>
+            <a href="http://geddyjs.org/">
+              Geddy Web framework for NodeJS
+            </a>
+          </li>
+          <li>
+            <a href="https://www.github.com/mde/jake">
+              Jake JavaScript build tool
+            </a>
+          </li>
+          <li>
+            <a href="https://www.github.com/mde/model">
+              Model: a datastore-agnostic JavaScript ORM
+            </a>
+          </li>
+          <li>
+            <a href="https://www.github.com/mde/utilities">
+              Utilities: a classic collection of JavaScript utilities
+            </a>
+          </li>
+        </ul>
+
+        <% if (typeof previous != 'undefined') { %>
+          <h3>Previous posts</h3>
+          <%- formatPreviousArticles(previous); %>
+          <p><a href="/articles">All previous posts »</a></p>
+        <% } %>
+      </div>
+    </div>
   </body>
 </html>

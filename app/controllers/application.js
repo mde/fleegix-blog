@@ -17,6 +17,32 @@
 */
 
 var Application = function () {
+  this.protectFromForgery();
+
+  this._requireAuthorization = function (next) {
+    var self = this;
+    if (!this.session.get('isAdmin')) {
+      self.redirect('/articles');
+    }
+
+    next();
+  };
+
+  this._getPreviousArticles = function (next) {
+    var self = this
+      , opts = {
+          sort: {
+            publishedAt: 'desc'
+          }
+        , limit: 8
+        };
+    geddy.model.Article.all({publishedAt: {ne: null}},
+        opts, function(err, articles) {
+      self._previousArticles = articles;
+      next();
+    });
+  };
+
 };
 
 exports.Application = Application;

@@ -17,8 +17,14 @@
 */
 
 var Main = function () {
+  this.before(this._getPreviousArticles, {
+    async: true
+  });
+
   this.index = function (req, resp, params) {
-    this.respond(params, {
+    this.respond({
+      previous: this._previousArticles
+    }, {
       format: 'html'
     , template: 'app/views/main/index'
     });

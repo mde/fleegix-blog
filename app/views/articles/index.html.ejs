@@ -1,12 +1,11 @@
 <% if (articles) { %>
+<h2>All previous posts</h2>
 <% for (var i = 0, ii = articles.length; i < ii; i++) { %>
   <div>
-    <% if (articles[i].publishedAt) { %>
-    <div>
+    <p>
     <%- linkTo(articles[i].title, articlePath(articles[i].permalink)); %>
     (<%= geddy.date.strftime(articles[i].publishedAt, '%F') %>)
-    </div>
-    <% } %>
+    </p>
   </div>
 <% } %>
 <% } %>

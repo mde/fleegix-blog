@@ -1,7 +1,14 @@
-<h2><%= article.title %></h2>
+<link rel="stylesheet" href="/css/highlight/zenburn.css"/>
+<h2>
+  <a href="/articles/<%= article.permalink %>">
+    <%- article.title %>
+  </a>
+</h2>
+<h3><%= article.publishedAt %></h3>
 <p><%- article.bodyHtml %></p>
 <% if (comments.length) { %>
   <hr/>
+  <h2>Comments</h2>
   <% var comment;
      for (var i = 0, ii = comments.length; i < ii; i++) {
      comment = comments[i]; %>

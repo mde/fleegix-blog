@@ -1,12 +1,28 @@
+var md = require('node-markdown').Markdown
+  , hl = require('highlight').Highlight;
+
 var Articles = function () {
+  this.before(this._requireAuthorization, {
+    except: ['index', 'show']
+  , async: true
+  });
+  this.before(this._getPreviousArticles, {
+    async: true
+  });
+
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.all({}, {sort: {'publishedAt': 'desc'}},
+    geddy.model.Article.all({publishedAt: {ne: null}},
+        {sort: {'publishedAt': 'desc'}},
         function(err, articles) {
-      self.respond({params: params, articles: articles});
+      self.respond({
+        params: params
+      , articles: articles
+      , previous: self._previousArticles
+      });
     });
   };
 
@@ -33,8 +49,20 @@ var Articles = function () {
     geddy.model.Article.load({permalink: params.id},
         function(err, article) {
       article.getComments(function (err, comments) {
-        self.respond({params: params, article: article,
-            comments: comments});
+
+        article.body = article.body.replace(/<code:javascript>/g, '<pre><code>');
+        article.body = article.body.replace(/<\/code>/g, '</code></pre>');
+
+        article.bodyHtml = md(article.body);
+        article.bodyHtml = hl(article.bodyHtml, false, true);
+
+        article.publishedAt = geddy.utils.date.relativeTime(article.publishedAt);
+        self.respond({
+          params: params
+        , article: article
+        , comments: comments
+        , previous: self._previousArticles
+        });
       });
     });
   };

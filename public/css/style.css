@@ -21,9 +21,10 @@ p {
 }
 div.main {
   margin: auto;
-  padding: 18px 8px;
+  padding: 18px 8px 0 8px;
   text-align: left;
   max-width: 780px;
+  overflow: auto;
 }
 div.right-nav {
   width: 220px;

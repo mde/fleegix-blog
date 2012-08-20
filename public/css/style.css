@@ -24,7 +24,7 @@ div.main {
   padding: 18px 8px 0 8px;
   text-align: left;
   max-width: 780px;
-  overflow: auto;
+  overflow: hidden;
 }
 div.right-nav {
   width: 220px;

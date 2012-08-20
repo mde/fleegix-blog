@@ -10,7 +10,7 @@ var Articles = function () {
     async: true
   });
 
-  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.respondsWith = ['html', 'json', 'xml', 'rss'];
 
   this.index = function (req, resp, params) {
     var self = this;

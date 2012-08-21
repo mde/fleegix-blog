@@ -80,7 +80,6 @@ var Articles = function () {
     geddy.model.Article.load({permalink: params.id},
         function(err, article) {
       article.getComments(function (err, comments) {
-        article.publishedAt = geddy.utils.date.relativeTime(article.publishedAt);
         self.respond({
           params: params
         , article: article

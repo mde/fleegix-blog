@@ -8,6 +8,6 @@
     <%- article.title %>
   </a>
 </h2>
-<h3><%= article.publishedAt %></h3>
+<h3><%= formatArticleDate(article.publishedAt); %></h3>
 <p><%- formatArticleBody(article.body); %></p>
 

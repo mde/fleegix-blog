@@ -2,7 +2,7 @@ var md = require('node-markdown').Markdown
   , hl = require('highlight').Highlight;
 
 var helpers = {
-  'formatPreviousArticles': function (articles) {
+  formatPreviousArticles: function (articles) {
     var ret = []
       , article;
     ret.push('<ul>');
@@ -14,13 +14,17 @@ var helpers = {
     return ret.join('\n');
   }
 
-, 'formatArticleBody': function (body) {
+, formatArticleBody: function (body) {
     var html = body || '';
     html = html.replace(/<code:javascript>/g, '<pre><code>')
         .replace(/<\/code>/g, '</code></pre>');
     html = md(html);
     html = hl(html, false, true);
     return html;
+  }
+
+, formatArticleDate: function (date) {
+    return geddy.utils.date.relativeTime(date);
   }
 
 };

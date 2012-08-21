@@ -1,0 +1,15 @@
+<h3>
+  Log in
+</h3>
+<form action="/authentications" method="POST">
+<p>
+  <input name="username" type="text"/>
+</p>
+<p>
+  <input name="password" type="password"/>
+</p>
+<div>
+  <input name="same_origin_token" type="hidden" value="<%= token %>"/>
+  <input type="submit" value="Submit"/>
+</div>
+</form>

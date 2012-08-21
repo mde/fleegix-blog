@@ -5,8 +5,12 @@
     <title>Fleegix.org</title>
     <link rel="stylesheet" href="/css/bootstrap.responsive.css"/>
     <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="/css/highlight/zenburn.css"/>
   </head>
   <body>
+    <% if (typeof authenticated != 'undefined') { %>
+      <a class="admin" href="/articles/add">[Add new article]</a>
+    <% } %>
     <div class="main">
       <a class="masthead" href="/">Fleegix.org</a>
       <div class="content-wrap">

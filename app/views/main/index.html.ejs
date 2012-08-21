@@ -1,14 +1,8 @@
-<link rel="stylesheet" href="/css/highlight/zenburn.css"/>
 <%  var article;
     for (var i = 0, ii = previous.length; i < ii; i++) {
       article = previous[i];
 %>
-<h2>
-  <a href="/articles/<%= article.permalink %>">
-    <%- article.title %>
-  </a>
-</h2>
-  <h3><%= geddy.date.relativeTime(article.publishedAt) %></h3>
-  <p><%- article.bodyHtml %></p>
+<%= partial('../articles/_article', {article: article,
+    authenticated: authenticated}); %>
   <hr/>
 <%  } %>

@@ -22,8 +22,12 @@ var Main = function () {
   });
 
   this.index = function (req, resp, params) {
+    var self = this
+      , articles = this._previousArticles;
     this.respond({
-      previous: this._previousArticles
+      articles: articles
+    , previous: articles
+    , authenticated: this.session.get('authenticated')
     }, {
       format: 'html'
     , template: 'app/views/main/index'

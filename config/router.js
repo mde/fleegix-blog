@@ -19,6 +19,8 @@
 
 var router = new geddy.RegExpRouter();
 router.match('/').to({controller: 'Main', action: 'index'});
+router.match('/login').to({controller: 'Authentications', action: 'add'});
+router.match('/logout').to({controller: 'Authentications', action: 'remove'});
 
 // Basic routes
 // router.match('/moving/pictures/:id').to(
@@ -34,5 +36,6 @@ router.match('/').to({controller: 'Main', action: 'index'});
 
 router.resource('articles');
 router.resource('comments');
+router.resource('authentications');
 exports.router = router;
 

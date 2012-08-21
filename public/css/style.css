@@ -77,3 +77,8 @@ hr {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 36px;
 }
+a.admin {
+  display: block;
+  text-align: right;
+  margin: 8px;
+}

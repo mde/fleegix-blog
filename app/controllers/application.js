@@ -15,13 +15,12 @@
  * limitations under the License.
  *
 */
-
 var Application = function () {
   this.protectFromForgery();
 
-  this._requireAuthorization = function (next) {
+  this._requireAuthentication = function (next) {
     var self = this;
-    if (!this.session.get('isAdmin')) {
+    if (!this.session.get('authenticated')) {
       self.redirect('/articles');
     }
 

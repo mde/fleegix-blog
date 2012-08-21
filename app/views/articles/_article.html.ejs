@@ -1,0 +1,13 @@
+<% if (typeof authenticated != 'undefined') { %>
+  <a class="admin" href="/articles/<%= article.permalink %>/edit">
+    [Edit thiis article]
+  </a>
+<% } %>
+<h2>
+  <a href="/articles/<%= article.permalink %>">
+    <%- article.title %>
+  </a>
+</h2>
+<h3><%= article.publishedAt %></h3>
+<p><%- formatArticleBody(article.body); %></p>
+

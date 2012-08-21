@@ -1,8 +1,6 @@
-var md = require('node-markdown').Markdown
-  , hl = require('highlight').Highlight;
 
 var Articles = function () {
-  this.before(this._requireAuthorization, {
+  this.before(this._requireAuthentication, {
     except: ['index', 'show']
   , async: true
   });
@@ -10,19 +8,51 @@ var Articles = function () {
     async: true
   });
 
-  this.respondsWith = ['html', 'json', 'xml', 'rss'];
+  this.respondsWith = ['html', 'json', 'xml'];
 
   this.index = function (req, resp, params) {
     var self = this;
 
     geddy.model.Article.all({publishedAt: {ne: null}},
         {sort: {'publishedAt': 'desc'}},
-        function(err, articles) {
-      self.respond({
-        params: params
-      , articles: articles
-      , previous: self._previousArticles
-      });
+        function(err, data) {
+      var feed
+        , articles;
+
+      // RSS
+      if (params.format == 'xml' || self.request.url == '/articles.rss') {
+        articles = []
+        feed = {
+          title: 'Fleegix.org'
+        , link: 'http://fleegix.org/'
+        , article: articles
+        };
+        data.forEach(function (item) {
+          var article = {};
+          var body = item.bodyHtml;
+          body = body.replace(/<code:[^>]+>/g, '<pre><code>');
+          body = body.replace(/<\/code>/g, '</code></pre>');
+          article.body = {'#cdata': body};
+          article.title = {'#cdata': item.title};
+          article.publishedAt = geddy.date.toISO8601(item.publishedAt);
+          article.permalink = 'http://fleegix.org/' + item.permalink;
+          articles.push(article);
+        });
+        feed.toXML = function () {
+          return geddy.XML.stringify(this, {name: 'feed', arrayRoot:
+            false});
+        };
+        self.respond(feed, {format: 'xml'});
+      }
+      // Standard rendering hokey-pokey
+      else {
+        self.respond({
+          articles: data
+        , previous: self._previousArticles
+        , authenticated: self.session.get('authenticated')
+        });
+      }
+
     });
   };
 
@@ -46,22 +76,17 @@ var Articles = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
+
     geddy.model.Article.load({permalink: params.id},
         function(err, article) {
       article.getComments(function (err, comments) {
-
-        article.body = article.body.replace(/<code:javascript>/g, '<pre><code>');
-        article.body = article.body.replace(/<\/code>/g, '</code></pre>');
-
-        article.bodyHtml = md(article.body);
-        article.bodyHtml = hl(article.bodyHtml, false, true);
-
         article.publishedAt = geddy.utils.date.relativeTime(article.publishedAt);
         self.respond({
           params: params
         , article: article
         , comments: comments
         , previous: self._previousArticles
+        , authenticated: self.session.get('authenticated')
         });
       });
     });
@@ -70,7 +95,7 @@ var Articles = function () {
   this.edit = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.load(params.id, function(err, article) {
+    geddy.model.Article.load({permalink: params.id}, function(err, article) {
       self.respond({params: params, article: article});
     });
   };

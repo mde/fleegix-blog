@@ -1,3 +1,5 @@
+var md = require('node-markdown').Markdown
+  , hl = require('highlight').Highlight;
 
 var helpers = {
   'formatPreviousArticles': function (articles) {
@@ -11,6 +13,16 @@ var helpers = {
     ret.push('</ul>');
     return ret.join('\n');
   }
+
+, 'formatArticleBody': function (body) {
+    var html = body || '';
+    html = html.replace(/<code:javascript>/g, '<pre><code>')
+        .replace(/<\/code>/g, '</code></pre>');
+    html = md(html);
+    html = hl(html, false, true);
+    return html;
+  }
+
 };
 
 module.exports = helpers;

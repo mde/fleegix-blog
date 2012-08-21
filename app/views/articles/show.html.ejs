@@ -1,11 +1,4 @@
-<link rel="stylesheet" href="/css/highlight/zenburn.css"/>
-<h2>
-  <a href="/articles/<%= article.permalink %>">
-    <%- article.title %>
-  </a>
-</h2>
-<h3><%= article.publishedAt %></h3>
-<p><%- article.bodyHtml %></p>
+<%= partial('_article', {article: article, authenticated: authenticated}); %>
 <% if (comments.length) { %>
   <hr/>
   <h2>Comments</h2>

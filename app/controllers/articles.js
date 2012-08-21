@@ -24,14 +24,9 @@ var _formatRssFeed = function (data) {
 };
 
 var Articles = function () {
-  /*
   this.before(this._requireAuthentication, {
     except: ['index', 'show']
   , async: true
-  });
-  */
-  this.before(this._getPreviousArticles, {
-    async: true
   });
 
   this.respondsWith = ['html', 'json', 'xml'];
@@ -60,8 +55,6 @@ var Articles = function () {
       else {
         self.respond({
           articles: articles
-        , previous: self._previousArticles
-        , authenticated: authenticated
         });
       }
 
@@ -114,8 +107,6 @@ var Articles = function () {
           params: params
         , article: article
         , comments: comments
-        , previous: self._previousArticles
-        , authenticated: self.session.get('authenticated')
         });
       });
     });

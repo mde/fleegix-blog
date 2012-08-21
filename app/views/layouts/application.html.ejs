@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/highlight/zenburn.css"/>
   </head>
   <body>
-    <% if (typeof authenticated != 'undefined') { %>
+    <% if (authenticated) { %>
       <a class="admin" href="/articles/add">[Add new article]</a>
     <% } %>
     <div class="main">
@@ -63,11 +63,9 @@
           </li>
         </ul>
 
-        <% if (typeof previous != 'undefined') { %>
-          <h3>Previous posts</h3>
-          <%- formatPreviousArticles(previous); %>
-          <p><a href="/articles">All previous posts »</a></p>
-        <% } %>
+        <h3>Previous posts</h3>
+        <%- formatPreviousArticles(previous); %>
+        <p><a href="/articles">All previous posts »</a></p>
       </div>
     </div>
       <p>

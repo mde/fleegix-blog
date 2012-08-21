@@ -18,12 +18,22 @@
 var Application = function () {
   this.protectFromForgery();
 
-  this._requireAuthentication = function (next) {
-    var self = this;
-    if (!this.session.get('authenticated')) {
-      self.redirect('/articles');
+  this._checkAuthentication = function (next) {
+    if (this.session.get('authenticated')) {
+      geddy.log.info('setting authenticated');
+      this.authenticated = true;
     }
+    else {
+      geddy.log.info('setting not authenticated');
+      this.authenticated = false;
+    }
+    next();
+  };
 
+  this._requireAuthentication = function (next) {
+    if (!this.session.get('authenticated')) {
+      this.redirect('/articles');
+    }
     next();
   };
 
@@ -37,10 +47,19 @@ var Application = function () {
         };
     geddy.model.Article.all({publishedAt: {ne: null}},
         opts, function(err, articles) {
-      self._previousArticles = articles;
+      self.previous = articles;
       next();
     });
   };
+
+  this.before(this._checkAuthentication, {
+    async: true
+  });
+
+  this.before(this._getPreviousArticles, {
+    async: true
+  });
+
 
 };
 

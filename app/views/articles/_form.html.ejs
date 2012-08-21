@@ -1,0 +1,41 @@
+<%
+  var isUpdate = params.action == 'edit'
+    , article = typeof data != 'undefined' ? data : {}
+    , formAction = isUpdate ? '/articles/' + article.id + '?_method=PUT' : '/articles'
+    , btnText = isUpdate ? 'Update' : 'Create'
+    , publishedAt = article.publishedAt ? article.publishedAt : new Date()
+    , errors = params.errors;
+%>
+
+<form action="<%= formAction %>" method="post">
+<p>
+  <h3>Title</h3>
+  <div>
+    <input type="text" name="title" value="<%= article.title %>" style="width: 100%;" />
+  </div>
+</p>
+<p>
+  <h3>Permalink</h3>
+  <div>
+    <input type="text" name="permalink" value="<%= article.permalink %>" style="width: 100%;" />
+  </div>
+</p>
+<p>
+  <h3>Published date</h3>
+  <div>
+    <input type="text" name="publishedAt" value="<%=
+        geddy.date.toISO8601(publishedAt) %>" style="width: 100%;" />
+  </div>
+</p>
+<p>
+  <h3>Body</h3>
+  <div>
+    <textarea name="body" style="width: 100%; height: 280px;"><%= article.body %></textarea>
+  </div>
+</p>
+<p>
+  <input name="same_origin_token" type="hidden" value="<%= token %>"/>
+  <input type="submit" value="<%= btnText %>">
+</p>
+</form>
+

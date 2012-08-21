@@ -82,3 +82,6 @@ a.admin {
   text-align: right;
   margin: 8px;
 }
+input {
+  font-size: 16px;
+}

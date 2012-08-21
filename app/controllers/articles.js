@@ -24,10 +24,12 @@ var _formatRssFeed = function (data) {
 };
 
 var Articles = function () {
+  /*
   this.before(this._requireAuthentication, {
     except: ['index', 'show']
   , async: true
   });
+  */
   this.before(this._getPreviousArticles, {
     async: true
   });
@@ -39,7 +41,7 @@ var Articles = function () {
 
     geddy.model.Article.all({publishedAt: {ne: null}},
         {sort: {'publishedAt': 'desc'}},
-        function(err, data) {
+        function (err, data) {
       // RSS
       if (params.format == 'xml' || self.request.url == '/articles.rss') {
         self.respond(_formatRssFeed(data), {format: 'xml'});
@@ -57,20 +59,29 @@ var Articles = function () {
   };
 
   this.add = function (req, resp, params) {
-    this.respond({params: params});
+    this.respond({
+      params: params
+    , token: this.sameOriginToken
+    });
   };
 
   this.create = function (req, resp, params) {
-    params.id = params.id || geddy.string.uuid(10);
-
     var self = this
-      , article = geddy.model.Article.create(params);
+      , article;
 
-    article.save(function(err, data) {
-      if(err) {
+    params.permalink = params.permalink ||
+      params.title.toLowerCase().replace(/ /g, '-');
+
+    article = geddy.model.Article.create(params);
+
+    article.save(function (err, data) {
+      if (err) {
         params.errors = err;
         self.transfer('add');
-      } else self.redirect({controller: self.name});
+      }
+      else {
+        self.redirect('/articles/' + article.id + '/edit');
+      }
     });
   };
 
@@ -78,7 +89,10 @@ var Articles = function () {
     var self = this;
 
     geddy.model.Article.load({permalink: params.id},
-        function(err, article) {
+        function (err, article) {
+      if (err) {
+        throw err;
+      }
       article.getComments(function (err, comments) {
         self.respond({
           params: params
@@ -94,34 +108,42 @@ var Articles = function () {
   this.edit = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.load({permalink: params.id}, function(err, article) {
-      self.respond({params: params, article: article});
+    geddy.model.Article.load(params.id,
+        function (err, article) {
+      self.respond({
+        params: params
+      , article: article
+      , token: self.sameOriginToken
+      });
     });
   };
 
   this.update = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.load(params.id, function(err, article) {
-      article.id = params.id;
-
-      article.save(function(err, data) {
-        if(err) {
-          params.errors = err;
-          self.transfer('edit');
-        } else self.redirect({controller: self.name});
-      });
+    var article = geddy.model.Article.create(params);
+    article.save(function (err, article) {
+      if (err) {
+        params.errors = err;
+        self.transfer('edit');
+      }
+      else {
+        self.redirect('/articles/' + article.id + '/edit');
+      }
     });
   };
 
   this.remove = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.remove(params.id, function(err) {
-      if(err) {
+    geddy.model.Article.remove(params.id, function (err) {
+      if (err) {
         params.errors = err;
         self.transfer('edit');
-      } else self.redirect({controller: self.name});
+      }
+      else {
+        self.redirect({controller: self.name});
+      }
     });
   };
 

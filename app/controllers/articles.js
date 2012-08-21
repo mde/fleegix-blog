@@ -79,8 +79,11 @@ var Articles = function () {
     var self = this
       , article;
 
-    params.permalink = params.permalink ||
-      params.title.toLowerCase().replace(/ /g, '-');
+    if (params.publishedAt) {
+      params.permalink = params.permalink ||
+        geddy.date.strftime('%F') + '-' +
+        params.title.toLowerCase().replace(/ /g, '-');
+    }
 
     article = geddy.model.Article.create(params);
 
@@ -96,9 +99,12 @@ var Articles = function () {
   };
 
   this.show = function (req, resp, params) {
-    var self = this;
+    var self = this
+      , permalink = params.id ? params.id :
+            params.year + '-' + params.month + '-' +
+            params.date + '-' + params.link;
 
-    geddy.model.Article.load({permalink: params.id},
+    geddy.model.Article.load({permalink: permalink},
         function (err, article) {
       if (err) {
         throw err;

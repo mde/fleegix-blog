@@ -122,6 +122,8 @@ var Articles = function () {
     var self = this;
 
     var article = geddy.model.Article.create(params);
+
+    article._saved = true;
     article.save(function (err, article) {
       if (err) {
         params.errors = err;

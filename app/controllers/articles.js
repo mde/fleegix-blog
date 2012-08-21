@@ -1,3 +1,27 @@
+var _formatRssFeed = function (data) {
+  var articles = []
+    , feed = {
+        title: 'Fleegix.org'
+      , link: 'http://fleegix.org/'
+      , article: articles
+      };
+  data.forEach(function (item) {
+    var article = {};
+    var body = item.bodyHtml;
+    body = body.replace(/<code:[^>]+>/g, '<pre><code>');
+    body = body.replace(/<\/code>/g, '</code></pre>');
+    article.body = {'#cdata': body};
+    article.title = {'#cdata': item.title};
+    article.publishedAt = geddy.date.toISO8601(item.publishedAt);
+    article.permalink = 'http://fleegix.org/' + item.permalink;
+    articles.push(article);
+  });
+  feed.toXML = function () {
+    return geddy.XML.stringify(this, {name: 'feed', arrayRoot:
+      false});
+  };
+  return feed;
+};
 
 var Articles = function () {
   this.before(this._requireAuthentication, {
@@ -16,33 +40,9 @@ var Articles = function () {
     geddy.model.Article.all({publishedAt: {ne: null}},
         {sort: {'publishedAt': 'desc'}},
         function(err, data) {
-      var feed
-        , articles;
-
       // RSS
       if (params.format == 'xml' || self.request.url == '/articles.rss') {
-        articles = []
-        feed = {
-          title: 'Fleegix.org'
-        , link: 'http://fleegix.org/'
-        , article: articles
-        };
-        data.forEach(function (item) {
-          var article = {};
-          var body = item.bodyHtml;
-          body = body.replace(/<code:[^>]+>/g, '<pre><code>');
-          body = body.replace(/<\/code>/g, '</code></pre>');
-          article.body = {'#cdata': body};
-          article.title = {'#cdata': item.title};
-          article.publishedAt = geddy.date.toISO8601(item.publishedAt);
-          article.permalink = 'http://fleegix.org/' + item.permalink;
-          articles.push(article);
-        });
-        feed.toXML = function () {
-          return geddy.XML.stringify(this, {name: 'feed', arrayRoot:
-            false});
-        };
-        self.respond(feed, {format: 'xml'});
+        self.respond(_formatRssFeed(data), {format: 'xml'});
       }
       // Standard rendering hokey-pokey
       else {

@@ -37,21 +37,31 @@ var Articles = function () {
   this.respondsWith = ['html', 'json', 'xml'];
 
   this.index = function (req, resp, params) {
-    var self = this;
+    var self = this
+      , authenticated = this.session.get('authenticated');
 
-    geddy.model.Article.all({publishedAt: {ne: null}},
+    geddy.model.Article.all({},
         {sort: {'publishedAt': 'desc'}},
         function (err, data) {
+      var articles;
+      if (!authenticated) {
+        articles = data.filter(function (item) {
+          return !!item.publishedAt;
+        });
+      }
+      else {
+        articles = data;
+      }
       // RSS
       if (params.format == 'xml' || self.request.url == '/articles.rss') {
-        self.respond(_formatRssFeed(data), {format: 'xml'});
+        self.respond(_formatRssFeed(articles), {format: 'xml'});
       }
       // Standard rendering hokey-pokey
       else {
         self.respond({
-          articles: data
+          articles: articles
         , previous: self._previousArticles
-        , authenticated: self.session.get('authenticated')
+        , authenticated: authenticated
         });
       }
 

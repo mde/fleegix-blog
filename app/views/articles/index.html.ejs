@@ -1,12 +1,20 @@
-<% if (articles) { %>
+<%
+var articles;
+%>
 <h2>All previous posts</h2>
-<% for (var i = 0, ii = articles.length; i < ii; i++) { %>
+<%  for (var i = 0, ii = articles.length; i < ii; i++) {
+    article = articles[i];
+%>
   <div>
     <p>
-    <%- linkTo(articles[i].title, articlePath(articles[i].permalink)); %>
-    (<%= geddy.date.strftime(articles[i].publishedAt, '%F') %>)
+    <% if (article.publishedAt) { %>
+    <%- linkTo(article.title, articlePath(article.permalink)); %>
+    (<%= geddy.date.strftime(article.publishedAt, '%F') %>)
+    <% } else { %>
+    <%- linkTo(article.title, articlePath(article.id + '/edit')); %>
+    (Draft)
+    <% } %>
     </p>
   </div>
-<% } %>
-<% } %>
+<%  } %>
 

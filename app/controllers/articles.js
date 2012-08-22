@@ -32,14 +32,13 @@ var Articles = function () {
   this.respondsWith = ['html', 'json', 'xml'];
 
   this.index = function (req, resp, params) {
-    var self = this
-      , authenticated = this.session.get('authenticated');
+    var self = this;
 
     geddy.model.Article.all({},
         {sort: {'publishedAt': 'desc'}},
         function (err, data) {
       var articles;
-      if (!authenticated) {
+      if (!this.authenticated) {
         articles = data.filter(function (item) {
           return !!item.publishedAt;
         });

@@ -20,11 +20,9 @@ var Application = function () {
 
   this._checkAuthentication = function (next) {
     if (this.session.get('authenticated')) {
-      geddy.log.info('setting authenticated');
       this.authenticated = true;
     }
     else {
-      geddy.log.info('setting not authenticated');
       this.authenticated = false;
     }
     next();
@@ -59,7 +57,6 @@ var Application = function () {
   this.before(this._getPreviousArticles, {
     async: true
   });
-
 
 };
 

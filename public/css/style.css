@@ -24,11 +24,10 @@ div.main {
   padding: 18px 8px 0 8px;
   text-align: left;
   max-width: 780px;
-  overflow: hidden;
+  overflow: auto;
 }
 div.right-nav {
   width: 220px;
-  height: 560px;
   float: right;
   margin-left: 20px;
 }

@@ -45,6 +45,9 @@ var Articles = function () {
     geddy.model.Article.all({},
         {sort: {'publishedAt': 'desc'}},
         function (err, data) {
+      if (err) {
+        throw err;
+      }
       var articles;
       if (!self.authenticated) {
         articles = data.filter(function (item) {
@@ -105,6 +108,9 @@ var Articles = function () {
         throw err;
       }
       article.getComments(function (err, comments) {
+        if (err) {
+          throw err;
+        }
         self.respond({
           params: params
         , article: article
@@ -119,6 +125,9 @@ var Articles = function () {
 
     geddy.model.Article.load(params.id,
         function (err, article) {
+      if (err) {
+        throw err;
+      }
       self.respond({
         params: params
       , article: article
@@ -132,6 +141,9 @@ var Articles = function () {
 
     geddy.model.Article.load(params.id,
         function (err, article) {
+      if (err) {
+        throw err;
+      }
       params.permalink = _createPermalink(params);
       article.updateAttributes(params);
       article.save(function (err, article) {

@@ -15,7 +15,7 @@ var _createPermalink = function (params) {
           };
       data.forEach(function (item) {
         var article = {};
-        var body = item.bodyHtml;
+        var body = item.bodyHtml || item.body;
         body = body.replace(/<code:[^>]+>/g, '<pre><code>');
         body = body.replace(/<\/code>/g, '</code></pre>');
         article.body = {'#cdata': body};

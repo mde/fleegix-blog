@@ -63,9 +63,11 @@
           </li>
         </ul>
 
-        <h3>Previous posts</h3>
-        <%- formatPreviousArticles(previous); %>
-        <p><a href="/articles">All previous posts »</a></p>
+        <%= if (typeof previous != 'undefined') %>
+          <h3>Previous posts</h3>
+          <%- formatPreviousArticles(previous); %>
+          <p><a href="/articles">All previous posts »</a></p>
+        <% } %>
       </div>
     </div>
     <p>

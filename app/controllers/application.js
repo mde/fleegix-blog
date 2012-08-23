@@ -29,7 +29,7 @@ var Application = function () {
   };
 
   this._requireAuthentication = function (next) {
-    if (!this.session.get('authenticated')) {
+    if (!this.authenticated) {
       this.redirect('/articles');
     }
     next();

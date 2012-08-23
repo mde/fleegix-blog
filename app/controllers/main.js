@@ -17,17 +17,13 @@
 */
 
 var Main = function () {
-  this.before(this._getPreviousArticles, {
-    async: true
-  });
 
   this.index = function (req, resp, params) {
     var self = this
-      , articles = this._previousArticles;
+      , articles = this.previous;
     this.respond({
       articles: articles
     , previous: articles
-    , authenticated: this.session.get('authenticated')
     }, {
       format: 'html'
     , template: 'app/views/main/index'

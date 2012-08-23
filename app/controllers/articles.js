@@ -1,27 +1,35 @@
-var _formatRssFeed = function (data) {
-  var articles = []
-    , feed = {
-        title: 'Fleegix.org'
-      , link: 'http://fleegix.org/'
-      , article: articles
+var _createPermalink = function (params) {
+      var dt = params.publishedAt ?
+          geddy.date.parse(params.publishedAt) : new Date();
+      return params.permalink ||
+        geddy.date.strftime(dt, '%F') + '-' +
+        params.title.toLowerCase().replace(/ /g, '-');
+    }
+
+  , _formatRssFeed = function (data) {
+      var articles = []
+        , feed = {
+            title: 'Fleegix.org'
+          , link: 'http://fleegix.org/'
+          , article: articles
+          };
+      data.forEach(function (item) {
+        var article = {};
+        var body = item.bodyHtml;
+        body = body.replace(/<code:[^>]+>/g, '<pre><code>');
+        body = body.replace(/<\/code>/g, '</code></pre>');
+        article.body = {'#cdata': body};
+        article.title = {'#cdata': item.title};
+        article.publishedAt = geddy.date.toISO8601(item.publishedAt);
+        article.permalink = 'http://fleegix.org/' + item.permalink;
+        articles.push(article);
+      });
+      feed.toXML = function () {
+        return geddy.XML.stringify(this, {name: 'feed', arrayRoot:
+          false});
       };
-  data.forEach(function (item) {
-    var article = {};
-    var body = item.bodyHtml;
-    body = body.replace(/<code:[^>]+>/g, '<pre><code>');
-    body = body.replace(/<\/code>/g, '</code></pre>');
-    article.body = {'#cdata': body};
-    article.title = {'#cdata': item.title};
-    article.publishedAt = geddy.date.toISO8601(item.publishedAt);
-    article.permalink = 'http://fleegix.org/' + item.permalink;
-    articles.push(article);
-  });
-  feed.toXML = function () {
-    return geddy.XML.stringify(this, {name: 'feed', arrayRoot:
-      false});
-  };
-  return feed;
-};
+      return feed;
+    };
 
 var Articles = function () {
   this.before(this._requireAuthentication, {
@@ -38,7 +46,7 @@ var Articles = function () {
         {sort: {'publishedAt': 'desc'}},
         function (err, data) {
       var articles;
-      if (!this.authenticated) {
+      if (!self.authenticated) {
         articles = data.filter(function (item) {
           return !!item.publishedAt;
         });
@@ -71,12 +79,7 @@ var Articles = function () {
     var self = this
       , article;
 
-    if (params.publishedAt) {
-      params.permalink = params.permalink ||
-        geddy.date.strftime('%F') + '-' +
-        params.title.toLowerCase().replace(/ /g, '-');
-    }
-
+    params.permalink = _createPermalink(params);
     article = geddy.model.Article.create(params);
 
     article.save(function (err, data) {
@@ -127,17 +130,19 @@ var Articles = function () {
   this.update = function (req, resp, params) {
     var self = this;
 
-    var article = geddy.model.Article.create(params);
-
-    article._saved = true;
-    article.save(function (err, article) {
-      if (err) {
-        params.errors = err;
-        self.transfer('edit');
-      }
-      else {
-        self.redirect('/articles/' + article.id + '/edit');
-      }
+    geddy.model.Article.load(params.id,
+        function (err, article) {
+      params.permalink = _createPermalink(params);
+      article.updateAttributes(params);
+      article.save(function (err, article) {
+        if (err) {
+          params.errors = err;
+          self.transfer('edit');
+        }
+        else {
+          self.redirect('/articles/' + article.id + '/edit');
+        }
+      });
     });
   };
 

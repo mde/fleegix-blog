@@ -24,7 +24,8 @@ var helpers = {
   }
 
 , formatArticleDate: function (date) {
-    return geddy.utils.date.relativeTime(date);
+    return date ? geddy.utils.date.relativeTime(date) :
+      'Draft';
   }
 
 };

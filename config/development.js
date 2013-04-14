@@ -26,6 +26,18 @@ var config = {
   , key: 'sid'
   , expiry: 14 * 24 * 60 * 60
   }
+, model: {
+    defaultAdapter: 'postgres'
+  }
+, db: {
+    postgres: {
+      user: process.env.USER
+    , database: 'fleegix_blog'
+    , password: null
+    , host: null
+    , port: 5432
+    }
+  }
 };
 
 module.exports = config;

@@ -107,16 +107,23 @@ var Articles = function () {
       if (err) {
         throw err;
       }
-      article.getComments(function (err, comments) {
-        if (err) {
-          throw err;
-        }
-        self.respond({
-          params: params
-        , article: article
-        , comments: comments
+      if (!article) {
+        var err = new Error();
+        err.statusCode = 404;
+        self.error(err);
+      }
+      else {
+        article.getComments(function (err, comments) {
+          if (err) {
+            throw err;
+          }
+          self.respond({
+            params: params
+          , article: article
+          , comments: comments
+          });
         });
-      });
+      }
     });
   };
 

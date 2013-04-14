@@ -20,10 +20,8 @@ var Main = function () {
 
   this.index = function (req, resp, params) {
     var self = this
-      , articles = this.previous;
     this.respond({
-      articles: articles
-    , previous: articles
+      articles: this.previous
     }, {
       format: 'html'
     , template: 'app/views/main/index'

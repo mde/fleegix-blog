@@ -45,6 +45,9 @@ var Application = function () {
         };
     geddy.model.Article.all({publishedAt: {ne: null}},
         opts, function(err, articles) {
+      if (err) {
+        throw err;
+      }
       self.previous = articles;
       next();
     });

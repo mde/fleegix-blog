@@ -31,7 +31,7 @@ var config = {
   }
 , db: {
     postgres: {
-      user: process.env.USER
+      user: 'postgres'
     , database: 'fleegix_blog'
     , password: null
     , host: null

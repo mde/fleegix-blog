@@ -1,5 +1,6 @@
 <%
-var articles;
+var articles
+  , article;
 %>
 <h2>All previous posts</h2>
 <%  for (var i = 0, ii = articles.length; i < ii; i++) {
@@ -8,7 +9,7 @@ var articles;
   <div>
     <p>
     <% if (article.publishedAt) { %>
-    <%- linkTo(article.title, articlePath(article.permalink)); %>
+    <%- linkTo(article.title, articlePath.apply(null, article.permalinkParts())); %>
     (<%= geddy.date.strftime(article.publishedAt, '%F') %>)
     <% } else { %>
     <%- linkTo(article.title, articlePath(article.id + '/edit')); %>

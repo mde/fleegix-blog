@@ -18,5 +18,17 @@ var Article = function () {
   this.adapter = 'postgres';
 };
 
+Article.prototype.permalinkParts = function () {
+  var parts
+    , pathParts;
+  parts = this.permalink.split('-');
+  pathParts = [];
+  pathParts.push(parts.shift()); // YYYY
+  pathParts.push(parts.shift()); // MM
+  pathParts.push(parts.shift()); // DD
+  pathParts.push(parts.join('-')); // hyphenated title
+  return pathParts;
+}
+
 Article = geddy.model.register('Article', Article);
 

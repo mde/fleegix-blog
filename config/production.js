@@ -27,6 +27,7 @@ var config = {
   }
 , model: {
     defaultAdapter: 'postgres'
+  , autoIncrementId: true
   }
 , db: {
     postgres: {

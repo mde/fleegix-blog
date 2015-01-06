@@ -57,10 +57,6 @@ var Application = function () {
     async: true
   });
 
-  this.before(this._getPreviousArticles, {
-    async: true
-  });
-
 };
 
 exports.Application = Application;

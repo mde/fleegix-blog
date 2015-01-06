@@ -14,16 +14,24 @@ var Authentications = function () {
   this.create = function (req, resp, params) {
     var sha = crypto.createHash('sha1')
       , result;
+
+    if (!geddy.config.secret) {
+      throw new Error('Missing app secret');
+    }
+
     sha.update(geddy.config.secret);
     sha.update(params.username);
     sha.update(params.password);
 
     result = sha.digest('hex');
-    if (result == geddy.config.sitePassword) {
+    if (params.username == 'admin' && result == geddy.config.sitePassword) {
       this.session.set('authenticated', true);
+      this.redirect('/');
+    }
+    else {
+      throw new geddy.errors.UnauthorizedError();
     }
 
-    this.redirect('/');
   };
 
   this.remove = function (req, resp, params) {

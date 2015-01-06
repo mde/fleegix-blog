@@ -36,6 +36,11 @@ var Articles = function () {
     except: ['index', 'show']
   , async: true
   });
+  this.before(this._getPreviousArticles, {
+    except: ['create', 'update']
+  , async: true
+  });
+
 
   this.respondsWith = ['html', 'json', 'xml'];
 
@@ -102,7 +107,7 @@ var Articles = function () {
             params.year + '-' + params.month + '-' +
             params.date + '-' + params.link;
 
-    geddy.model.Article.load({permalink: permalink},
+    geddy.model.Article.first({permalink: permalink},
         function (err, article) {
       if (err) {
         throw err;
@@ -130,7 +135,7 @@ var Articles = function () {
   this.edit = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.load(params.id,
+    geddy.model.Article.first(params.id,
         function (err, article) {
       if (err) {
         throw err;
@@ -146,7 +151,7 @@ var Articles = function () {
   this.update = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Article.load(params.id,
+    geddy.model.Article.first(params.id,
         function (err, article) {
       if (err) {
         throw err;

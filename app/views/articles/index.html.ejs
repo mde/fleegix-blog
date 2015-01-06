@@ -3,6 +3,9 @@ var articles
   , article;
 %>
 <h2>All previous posts</h2>
+<% if (session.get('authenticated')) { -%>
+<div style="text-align: right;"><a href="/articles/add">[Create new article...]</a></div>
+<% } -%>
 <%  for (var i = 0, ii = articles.length; i < ii; i++) {
     article = articles[i];
 %>
